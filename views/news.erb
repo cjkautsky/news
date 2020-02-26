@@ -7,7 +7,7 @@
 
     <!-- Google Fonts -->
     <!-- Swap out "Roboto" for the font(s) you want to use -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abel&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" crossorigin="anonymous">
@@ -18,32 +18,51 @@
     <!-- Your own CSS -->
     <link rel="stylesheet" href="/styles.css">
 
-    <title>News</title>
+    <title><%= params["location"] %> Weather and News</title>
   </head>
-  <body>
+  <body style="background-image: url(https://lh3.googleusercontent.com/proxy/_ZW0-yu19FDRcfj4h05LhzVllX7y2GaG684d_C1vPC-Vzckv4W6amzTKfMLY9ujQ2u_kZKrVMN-IaEN06udQ8JSWmZbwja2xLPfnv425XraBWinO65CbhwkB)">
 
-    <div class="container mt-5">
-      <h1>News</h1>
-      <% @lat_lng = [] %>
-      <% results = Geocoder.search(params["location"]) %>
-      <% @lat_lng = results.first.coordinates %>
-      <% @lat = @lat_lng[0] %>
-      <% @lng = @lat_lng[1] %>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h1 class="newspaper-title">The Local Newspaper</h1>
+                <p style = "font-family:Abel,san-serif;font-style:italic;">The Weather and News for <%= params["location"] %></p>
+                <% @lat_lng = [] %>
+                <% results = Geocoder.search(params["location"]) %>
+                <% @lat_lng = results.first.coordinates %>
+                <% @lat = @lat_lng[0] %>
+                <% @lng = @lat_lng[1] %>
+            </div>
+        </div>
     </div>
 
-    <div class="container mt-5">    
+
+    <div class="container">    
         <% @forecast = ForecastIO.forecast(@lat,@lng).to_hash %>
         <% @current_temp = @forecast["currently"]["temperature"] %>
         <% @current_summary = @forecast["currently"]["summary"] %>
         <% daily_data = @forecast["daily"]["data"] %>
-        <div>
-            In <%= params["location"] %>, it is currently <%= @current_temp %> with <%= @current_summary.downcase %>
+        <div class="row">
+            <div class = "col-sm-4 text-center">
+            </div>
+            <div class = "col-sm-4 text-center">
+                <table class="table table-light">
+                    <tr>
+                        <td class="table-primary">
+                            In <%= params["location"] %>, it is currently <%= @current_temp %> with <%= @current_summary.downcase %>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class = "col-sm-4 text-center">
+            </div>
         </div>
-        <div>
-            -------------------
-        </div>
-        <div>
-            Extended forecast:
+        <div class="container">
+            <div class="row">
+                <div class="col text-center forecast">  
+                    Extended Forecast
+                </div>
+            </div>
         </div>
         <div>
             <table class="table">
@@ -85,32 +104,37 @@
     <div class="container mt-5">    
         <% url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=bf5ac5ecf7b844b2af538df0fa34201b" %>
         <% news = HTTParty.get(url).parsed_response.to_hash %>
-        <table>    
-            <tr>
-                <td>
-                    Headline
-                </td>
-                <td>
-                    Link
-                </td>
-                <% for article in news["articles"] %>
-                    <tr>
-                        <% source = article["source"]["name"] %>
-                        <% title = article["title"] %>
-                        <% link = article["url"] %>
-                        <td>
-                            <%= title %>
-                        </td>
-                        <td>
-                            <a href="<%= link %>" target="_blank"><%= source %></a>
-                        </td>
-                    </tr>
-                <% end %>
+        <table class="table">    
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">National Headlines (US)</th>
+                    <th scope="col">Sources</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <% for article in news["articles"] %>
+                        <tr class="table-info">
+                            <% source = article["source"]["name"] %>
+                            <% title = article["title"] %>
+                            <% link = article["url"] %>
+                            <td>
+                                <%= title %>
+                            </td>
+                            <td>
+                                <a href="<%= link %>" target="_blank"><%= source %></a>
+                            </td>
+                        </tr>
+                    <% end %>
+            </tbody>
         </table>
     </div> 
 
-    <div class="container mt-5">    
-        <a href="/" class="btn btn-dark">Go Back</a>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">  
+                <a href="/" class="btn btn-dark">Get the News for Another Location</a>
+            </div>
+        </div>
     </div>
 
     <!-- Optional JavaScript -->
