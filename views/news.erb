@@ -24,11 +24,17 @@
 
     <div class="container mt-5">
       <h1>News</h1>
-      <form action="/news">
-        <label>Enter your location:</label>
-        <input type="text" name="location">
-        <button type="submit" class="btn btn-primary">Go there</submit>
-      </form>
+      <% @lat_lng = [] %>
+      <% results = Geocoder.search(params["location"]) %>
+      <% @lat_lng = results.first.coordinates %>
+      <% @lat = @lat_lng[0] %>
+      <% @lng = @lat_lng[1] %>
+      <%= @lat %>
+      <%= @lng %>
+    </div>
+
+    <div class="container mt-5">    
+        <a href="/" class="btn btn-dark">Go Back</a>
     </div>
 
     <!-- Optional JavaScript -->

@@ -10,9 +10,9 @@ before { puts "Parameters: #{params}" }
 ForecastIO.api_key = "YOUR-API-KEY"
 
 get "/" do
-  # show a view that asks for the location
+  view "ask"
 end
 
 get "/news" do
-  # do everything else
+  view "news"
 end
