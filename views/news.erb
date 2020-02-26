@@ -34,6 +34,32 @@
     </div>
 
     <div class="container mt-5">    
+        <% @forecast = ForecastIO.forecast(@lat,@lng).to_hash %>
+        <% @current_temp = @forecast["currently"]["temperature"] %>
+        <% @current_summary = @forecast["currently"]["summary"] %>
+        <% daily_data = @forecast["daily"]["data"] %>
+        "In Chicago, it is currently <%= @current_temp %> with <%= @current_summary.downcase %>"
+        "-------------------"
+        "Extended forecast:"
+        <% for day in daily_data %>
+            <% daily_hightemp = day["temperatureHigh"] %>
+            <% daily_summary = day["summary"] %>
+            "A high temperature of <%= daily_hightemp %> and <%= daily_summary.downcase %>"
+        <% end %>
+    </div>
+
+    <div class="container mt-5">    
+        require 'open-uri'
+        url = 'http://newsapi.org/v2/top-headlines?'\
+            'country=us&'\
+            'apiKey=bf5ac5ecf7b844b2af538df0fa34201b'
+        req = open(url)
+        response_body = req.read
+        puts response_body
+    </div> 
+
+
+    <div class="container mt-5">    
         <a href="/" class="btn btn-dark">Go Back</a>
     </div>
 
