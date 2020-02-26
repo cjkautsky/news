@@ -29,8 +29,6 @@
       <% @lat_lng = results.first.coordinates %>
       <% @lat = @lat_lng[0] %>
       <% @lng = @lat_lng[1] %>
-      <%= @lat %>
-      <%= @lng %>
     </div>
 
     <div class="container mt-5">    
@@ -38,26 +36,59 @@
         <% @current_temp = @forecast["currently"]["temperature"] %>
         <% @current_summary = @forecast["currently"]["summary"] %>
         <% daily_data = @forecast["daily"]["data"] %>
-        "In Chicago, it is currently <%= @current_temp %> with <%= @current_summary.downcase %>"
-        "-------------------"
-        "Extended forecast:"
-        <% for day in daily_data %>
-            <% daily_hightemp = day["temperatureHigh"] %>
-            <% daily_summary = day["summary"] %>
-            "A high temperature of <%= daily_hightemp %> and <%= daily_summary.downcase %>"
-        <% end %>
+        <div>
+            In <%= params["location"] %>, it is currently <%= @current_temp %> with <%= @current_summary.downcase %>
+        </div>
+        <div>
+            -------------------
+        </div>
+        <div>
+            Extended forecast:
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        High Temp
+                    </td>
+                    <td>
+                        Low Temp
+                    </td>
+                    <td>
+                        Conditions
+                    </td>
+                </tr>
+            <% for day in daily_data %>
+                <tr>
+                    <td>
+                        <% daily_hightemp = day["temperatureHigh"] %>
+                        <%= daily_hightemp %>
+                    </td>
+                    <td>
+                        <% daily_lowtemp = day["temperatureLow"] %>
+                        <%= daily_lowtemp %>
+                    </td>
+                    <td>
+                        <% daily_summary = day["summary"] %>
+                        <%= daily_summary %>
+                    </td>
+                </tr>
+            <% end %>
+        </div>
     </div>
 
     <div class="container mt-5">    
-        require 'open-uri'
-        url = 'http://newsapi.org/v2/top-headlines?'\
-            'country=us&'\
-            'apiKey=bf5ac5ecf7b844b2af538df0fa34201b'
-        req = open(url)
-        response_body = req.read
-        puts response_body
+        <% url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=bf5ac5ecf7b844b2af538df0fa34201b" %>
+        <% news = HTTParty.get(url).parsed_response.to_hash %>
+        <% for article in news["articles"] %>
+            <div>
+                <% source = article["source"] %>
+                <% title = article["title"] %>
+                <% link = article["url"] %>
+                <%= title %> " | " <%= link %>
+            </div>
+        <% end %>
     </div> 
-
 
     <div class="container mt-5">    
         <a href="/" class="btn btn-dark">Go Back</a>
