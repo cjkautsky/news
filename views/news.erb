@@ -46,48 +46,67 @@
             Extended forecast:
         </div>
         <div>
-            <table>
-                <tr>
-                    <td>
-                        High Temp
-                    </td>
-                    <td>
-                        Low Temp
-                    </td>
-                    <td>
-                        Conditions
-                    </td>
-                </tr>
-            <% for day in daily_data %>
-                <tr>
-                    <td>
-                        <% daily_hightemp = day["temperatureHigh"] %>
-                        <%= daily_hightemp %>
-                    </td>
-                    <td>
-                        <% daily_lowtemp = day["temperatureLow"] %>
-                        <%= daily_lowtemp %>
-                    </td>
-                    <td>
-                        <% daily_summary = day["summary"] %>
-                        <%= daily_summary %>
-                    </td>
-                </tr>
-            <% end %>
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">High Temp</th>
+                        <th scope="col">Low Temp</th>
+                        <th scope="col">Conditions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for day in daily_data %>
+                        <tr>
+                            <th scope="row">
+                                <% date = day["time"] %>
+                                <% t = Time.at(date) %>
+                                <%= t.month %>/<%= t.day %>/<%= t.year %>
+                            </th>
+                            <td>
+                                <% daily_hightemp = day["temperatureHigh"] %>
+                                <%= daily_hightemp %>
+                            </td>
+                            <td>
+                                <% daily_lowtemp = day["temperatureLow"] %>
+                                <%= daily_lowtemp %>
+                            </td>
+                            <td>
+                                <% daily_summary = day["summary"] %>
+                                <%= daily_summary %>
+                            </td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <div class="container mt-5">    
         <% url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=bf5ac5ecf7b844b2af538df0fa34201b" %>
         <% news = HTTParty.get(url).parsed_response.to_hash %>
-        <% for article in news["articles"] %>
-            <div>
-                <% source = article["source"] %>
-                <% title = article["title"] %>
-                <% link = article["url"] %>
-                <%= title %> " | " <%= link %>
-            </div>
-        <% end %>
+        <table>    
+            <tr>
+                <td>
+                    Headline
+                </td>
+                <td>
+                    Link
+                </td>
+                <% for article in news["articles"] %>
+                    <tr>
+                        <% source = article["source"]["name"] %>
+                        <% title = article["title"] %>
+                        <% link = article["url"] %>
+                        <td>
+                            <%= title %>
+                        </td>
+                        <td>
+                            <a href="<%= link %>" target="_blank"><%= source %></a>
+                        </td>
+                    </tr>
+                <% end %>
+        </table>
     </div> 
 
     <div class="container mt-5">    
